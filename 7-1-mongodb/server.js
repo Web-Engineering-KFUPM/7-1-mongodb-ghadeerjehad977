@@ -26,6 +26,8 @@
  *   - 2.2: write any password.
  *    Note: Take a single screen shot of the Todo 2.1 & 2.2 before presing create database user button and save it in      Mongo-Screen-shots/TODO-2
  *   - 2.3: click on the button to create a database user
+ * npm install mongodb
+ * mongodb+srv://ghadeer88775_db_user:<db_password>@cluster0.qsi0yrn.mongodb.net/?appName=Cluster0
  * 
  * ============================================
  * TODO-3 Allow access to the network
@@ -42,6 +44,7 @@
 *    - 4.2: choose shell as the connection option.
 *    - 4.3: click on the I don't have mongoDB shell installed. 
  *   - 4.4: choose windows or MacOS as operating system and install mongosh.(Take screent shot and save it in Mongo-Screen-shots/TODO-4)
+ * mongosh "mongodb+srv://cluster0.qsi0yrn.mongodb.net/" --apiVersion 1 --username ghadeer88775_db_user
  *   - 4.5: After installation setup the environment variable path.(Take screent shot and save it in Mongo-Screen-shots/TODO-4)
  *   - 4.6: copy the connection string
  *   - 4.7: open cmd and paste the connection string to establish connection with mongoDB cloud. (Take screent shot and save it in Mongo-Screen-shots/TODO-4)
@@ -186,19 +189,49 @@
 
 // import mongoose
 
-// establish connection
+import mongoose from "mongoose";
 
+// establish connection
+mongoose.connect("mongodb+srv://ghadeer88775_db_user:1234@cluster0.qsi0yrn.mongodb.net/TestDB")
+.then(()=> console.log("Connected"))
+.catch(err => console.log("err"));
 
 // define schema
-
+const studentSchema = new mongoose.Schema({
+         name: String,
+         age: Number,
+         major: String
+      });
+const Student = mongoose.model("Student", studentSchema);
 
 // create document
-
+async function createStudents() {
+      await Student.insertMany([
+         { name: "Ali", age: 21, major: "CS" },
+         { name: "Sara", age: 23, major: "SE" }
+      ]);
+      console.log("✅ Inserted");
+      }
+      createStudents();
 
 // read document
-
+async function readStudents() {
+         const all = await Student.find();
+         console.log(all);
+      }
+      readStudents();
 
 // update document
-
+async function updateStudent() {
+         await Student.updateOne({ name: "Ali" }, { age: 22 });
+         console.log("✅ Updated Ali");
+      }
+      updateStudent();
 
 // delete document
+async function deleteStudent() {
+         await Student.deleteOne({ name: "Sara" });
+      console.log("✅ Deleted Sara");
+      }
+      deleteStudent();
+      
